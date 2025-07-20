@@ -1,0 +1,5 @@
+Django>=4.2
+django-tailwind>=3.5
+pytz
+sqlparse
+asgiref 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Leave Requests</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-yellow-100 to-green-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-4xl fade-in">
+        <h1 class="text-3xl font-extrabold mb-6 text-center text-yellow-700 flex items-center gap-2">📝 Manage Leave Requests</h1>
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto mb-4 rounded-xl overflow-hidden shadow-lg">
+                <thead class="bg-yellow-200">
+                    <tr>
+                        <th class="px-4 py-2">Driver</th>
+                        <th class="px-4 py-2">Start Date</th>
+                        <th class="px-4 py-2">End Date</th>
+                        <th class="px-4 py-2">Reason</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leaves %}
+                    <tr class="border-t hover:bg-yellow-50 transition">
+                        <td class="px-4 py-2 font-semibold">{{ leave.driver.user.username }}</td>
+                        <td class="px-4 py-2">{{ leave.start_date }}</td>
+                        <td class="px-4 py-2">{{ leave.end_date }}</td>
+                        <td class="px-4 py-2">{{ leave.reason }}</td>
+                        <td class="px-4 py-2">
+                            {% if leave.status == 'pending' %}
+                                <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-semibold">Pending</span>
+                            {% elif leave.status == 'approved' %}
+                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Approved</span>
+                            {% elif leave.status == 'rejected' %}
+                                <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">Rejected</span>
+                            {% else %}
+                                <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold">{{ leave.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-2 space-x-2">
+                            {% if leave.status == 'pending' %}
+                                <a href="/panel/leaves/approve/{{ leave.id }}/" class="text-green-600 hover:underline font-semibold">Approve</a>
+                                <a href="/panel/leaves/reject/{{ leave.id }}/" class="text-red-600 hover:underline font-semibold">Reject</a>
+                            {% else %}
+                                <span class="text-gray-400">No actions</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center py-4">No leave requests found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6 text-center">
+            <a href="/panel/" class="text-yellow-600 hover:underline">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

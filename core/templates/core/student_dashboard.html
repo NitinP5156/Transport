@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #a5b4fc 0%, #f0abfc 50%, #6ee7b7 100%);
+            background-size: 1200% 1200%;
+            animation: gradientMove 18s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        .fade-in { animation: fadeIn 1s cubic-bezier(0.4,0,0.2,1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .glass {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        .stat-animate { animation: popIn 0.8s cubic-bezier(0.4,0,0.2,1); }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+        .action-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .action-card:hover { transform: translateY(-8px) scale(1.04) rotate(-1deg); box-shadow: 0 10px 32px 0 rgba(80,80,180,0.15); }
+        .next-ride { background: linear-gradient(90deg, #818cf8 0%, #f0abfc 100%); color: #fff; }
+        .banner { background: linear-gradient(90deg, #f0abfc 0%, #818cf8 100%); color: #4f46e5; }
+        .notif-area { background: linear-gradient(90deg, #fcd34d 0%, #fbbf24 100%); color: #92400e; border-radius: 1rem; box-shadow: 0 2px 16px 0 rgba(252,211,77,0.12); padding: 1rem 2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; font-size: 1.1rem; }
+        .quick-actions { background: rgba(129,140,248,0.12); border-radius: 1.5rem; box-shadow: 0 2px 16px 0 rgba(129,140,248,0.12); padding: 1.5rem 2rem; margin-bottom: 2rem; display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; animation: fadeIn 1.2s; }
+        .quick-actions-title { color: #4f46e5; font-size: 1.2rem; font-weight: 700; }
+        .quick-actions-list { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .quick-action-btn { background: linear-gradient(90deg, #f0abfc 0%, #818cf8 100%); color: #4f46e5; border-radius: 0.75rem; padding: 0.75rem 1.5rem; font-weight: 600; box-shadow: 0 2px 8px 0 rgba(129,140,248,0.12); transition: background 0.3s, color 0.3s, transform 0.2s; display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; }
+        .quick-action-btn:hover { background: linear-gradient(90deg, #818cf8 0%, #f0abfc 100%); color: #fff; transform: scale(1.05); }
+        .animated-icon { animation: bounce 1.5s infinite alternate; }
+        @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
+        .nav-glass { background: rgba(255,255,255,0.85); box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.18); }
+        .logout-btn { background: linear-gradient(90deg, #f87171 0%, #fbbf24 100%); color: #fff; font-weight: 700; border-radius: 0.75rem; padding: 0.5rem 1.5rem; transition: background 0.3s, color 0.3s, transform 0.2s; box-shadow: 0 2px 8px 0 rgba(248,113,113,0.12); }
+        .logout-btn:hover { background: linear-gradient(90deg, #ef4444 0%, #f59e42 100%); color: #fff; transform: scale(1.05); }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-200 via-pink-100 to-green-100">
+    <!-- Top Navigation Bar -->
+    <nav class="nav-glass fixed top-0 left-0 w-full flex items-center justify-between px-8 py-4 z-50">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-extrabold text-indigo-700 tracking-tight">🚍 College Transport</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-lg font-semibold text-indigo-700">Hi, {{ request.user.username|title }}</span>
+            <a href="/logout/" class="logout-btn">Logout</a>
+        </div>
+    </nav>
+    <div class="w-full max-w-4xl mx-auto p-6 fade-in pt-32">
+        <!-- Dashboard Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-indigo-800 tracking-tight mb-2">Student Dashboard</h1>
+            <div class="text-lg text-indigo-400 font-medium">Your personalized college transport hub</div>
+        </div>
+        <!-- Notification/Alert Area (example: important messages) -->
+        {% if messages %}
+        <div class="notif-area">
+            <span class="text-2xl">🔔</span>
+            <ul class="list-disc ml-4">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <!-- Motivational Banner -->
+        <div class="banner glass shadow-xl p-6 mb-8 flex items-center gap-4">
+            <span class="text-4xl">🌟</span>
+            <div>
+                <div class="text-xl font-bold">Welcome to Your Journey!</div>
+                <div class="text-sm font-medium">{{ tip }}</div>
+            </div>
+        </div>
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            <div class="stat-animate glass rounded-2xl shadow-lg p-8 flex flex-col items-center">
+                <span class="text-3xl mb-2 animated-icon">🚌</span>
+                <div class="text-3xl font-bold text-indigo-700">{{ available_routes }}</div>
+                <div class="text-gray-500">Available Routes</div>
+            </div>
+            <div class="stat-animate glass rounded-2xl shadow-lg p-8 flex flex-col items-center">
+                <span class="text-3xl mb-2 animated-icon">📅</span>
+                <div class="text-3xl font-bold text-pink-600">{{ upcoming_bookings }}</div>
+                <div class="text-gray-500">Upcoming Bookings</div>
+            </div>
+            <div class="stat-animate glass rounded-2xl shadow-lg p-8 flex flex-col items-center">
+                <span class="text-3xl mb-2 animated-icon">✅</span>
+                <div class="text-3xl font-bold text-green-600">{{ total_bookings }}</div>
+                <div class="text-gray-500">Total Bookings</div>
+            </div>
+        </div>
+        <!-- Next Ride Widget -->
+        <div class="next-ride glass shadow-lg p-8 mb-10 flex items-center gap-6">
+            <span class="text-5xl animated-icon">🚏</span>
+            {% if next_ride %}
+            <div>
+                <div class="font-bold text-lg">Next Ride:</div>
+                <div class="text-base">{{ next_ride.route.start_point }} → {{ next_ride.route.end_point }}</div>
+                <div class="text-base">Bus: {{ next_ride.bus.number }} | Seat: {{ next_ride.seat_number }}</div>
+                <div class="text-base">Date: {{ next_ride.date }} | Time: {{ next_ride.route.timings }}</div>
+            </div>
+            {% else %}
+            <div class="text-base">No upcoming rides. Book your next journey!</div>
+            {% endif %}
+        </div>
+        <!-- Action Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <a href="{% url 'list_routes' %}" class="action-card glass rounded-2xl shadow-lg p-8 flex flex-col items-center hover:bg-indigo-50 transition">
+                <span class="text-3xl mb-2">🗺️</span>
+                <div class="font-bold mb-1">View Bus Routes</div>
+                <div class="text-gray-500 text-sm">Explore all available routes and timings.</div>
+            </a>
+            <a href="{% url 'booking_history' %}" class="action-card glass rounded-2xl shadow-lg p-8 flex flex-col items-center hover:bg-indigo-50 transition">
+                <span class="text-3xl mb-2">📖</span>
+                <div class="font-bold mb-1">Booking History</div>
+                <div class="text-gray-500 text-sm">See your past and upcoming bookings.</div>
+            </a>
+            <a href="{% url 'list_routes' %}" class="action-card glass rounded-2xl shadow-lg p-8 flex flex-col items-center hover:bg-green-50 transition relative">
+                <span class="text-3xl mb-2">🎫</span>
+                <div class="font-bold mb-1">Book a Seat</div>
+                <div class="text-gray-500 text-sm">Reserve your seat for your next ride.</div>
+                {% if last_route %}
+                <a href="{% url 'book_seat' last_route.id %}" class="absolute bottom-4 right-4 bg-gradient-to-r from-indigo-500 to-pink-400 text-white px-3 py-1 rounded-lg shadow hover:scale-105 transition text-xs font-semibold">Book Again: {{ last_route.start_point }} → {{ last_route.end_point }}</a>
+                {% endif %}
+            </a>
+        </div>
+        <!-- Quick Actions Section (moved to bottom) -->
+        <div class="quick-actions mb-10">
+            <div class="quick-actions-title mb-2 flex items-center gap-2"><span class="animated-icon">⚡</span> Quick Actions</div>
+            <div class="quick-actions-list">
+                <a href="{% url 'list_routes' %}" class="quick-action-btn"><span class="animated-icon">🗺️</span>View Bus Routes</a>
+                <a href="{% url 'booking_history' %}" class="quick-action-btn"><span class="animated-icon">📖</span>Booking History</a>
+                <a href="{% url 'list_routes' %}" class="quick-action-btn"><span class="animated-icon">🎫</span>Book a Seat</a>
+                {% if last_route %}
+                <a href="{% url 'book_seat' last_route.id %}" class="quick-action-btn"><span class="animated-icon">🔁</span>Book Again: {{ last_route.start_point }} → {{ last_route.end_point }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

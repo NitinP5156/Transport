@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Bus to Driver</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-blue-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-3xl fade-in">
+        <h1 class="text-3xl font-extrabold mb-6 text-center text-indigo-700">Assign Bus to Driver</h1>
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="text-green-600 text-center">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <table class="min-w-full table-auto mb-8">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Bus Number</th>
+                    <th class="px-4 py-2">Current Driver</th>
+                    <th class="px-4 py-2">Assign/Reassign</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bus in buses %}
+                <tr class="border-t">
+                    <td class="px-4 py-2 font-semibold">{{ bus.number }}</td>
+                    <td class="px-4 py-2">
+                        {% if bus.assigned_driver %}
+                            {{ bus.assigned_driver.user.username }}
+                        {% else %}
+                            <span class="text-gray-400">No Driver</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">
+                        <form method="post" class="flex items-center gap-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="bus_id" value="{{ bus.id }}">
+                            <select name="driver_id" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition">
+                                <option value="">No Driver</option>
+                                {% for driver in drivers %}
+                                    <option value="{{ driver.id }}" {% if bus.assigned_driver and bus.assigned_driver.id == driver.id %}selected{% endif %}>{{ driver.user.username }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:from-indigo-600 hover:to-blue-600 font-semibold shadow-lg transition">Assign</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center py-4">No buses found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-6 text-center">
+            <a href="/panel/" class="text-blue-600 hover:underline">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

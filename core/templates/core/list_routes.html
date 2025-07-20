@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Bus Routes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(270deg, #a5b4fc, #f0abfc, #6ee7b7, #60a5fa, #818cf8);
+            background-size: 1200% 1200%;
+            animation: gradientMove 18s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        .fade-in { animation: fadeIn 1s cubic-bezier(0.4,0,0.2,1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .card-animate { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s; }
+        .card-animate:hover { transform: translateY(-8px) scale(1.04) rotate(-1deg); box-shadow: 0 10px 32px 0 rgba(80,80,180,0.15); }
+        .book-btn { background: linear-gradient(90deg, #818cf8 0%, #f0abfc 100%); color: #fff; }
+        .book-btn:hover { background: linear-gradient(90deg, #6366f1 0%, #e879f9 100%); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-3xl p-6 fade-in">
+        <h1 class="text-3xl font-extrabold mb-8 text-center text-indigo-700 flex items-center gap-2">🚌 Available Bus Routes</h1>
+        <div class="grid grid-cols-1 gap-6">
+            {% for route in routes %}
+            <div class="card-animate bg-white rounded-2xl shadow-xl p-6 flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">🗺️</span>
+                        <span class="font-bold text-lg">{{ route.start_point }} → {{ route.end_point }}</span>
+                    </div>
+                    <div class="text-gray-600 mb-1">Bus: <span class="font-semibold">{{ route.bus.number }}</span></div>
+                    <div class="text-gray-500 text-sm">Stops: {{ route.stops }}</div>
+                    <div class="text-gray-500 text-sm">Timings: {{ route.timings }}</div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <a href="{% url 'book_seat' route.id %}" class="book-btn px-6 py-2 rounded-lg font-semibold shadow transition text-lg">Book</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center text-gray-500 py-8">No routes available.</div>
+            {% endfor %}
+        </div>
+        <div class="mt-8 text-center">
+            <a href="/student/" class="text-blue-600 hover:underline">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

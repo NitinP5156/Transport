@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #fef08a 0%, #fcd34d 50%, #fbbf24 100%);
+            background-size: 1200% 1200%;
+            animation: gradientMove 18s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        .glass {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 8px 32px 0 rgba(251,191,36,0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        .action-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .action-card:hover { transform: translateY(-8px) scale(1.04) rotate(-1deg); box-shadow: 0 10px 32px 0 rgba(251,191,36,0.15); }
+        .nav-glass { background: rgba(255,255,255,0.85); box-shadow: 0 4px 24px 0 rgba(251,191,36,0.10); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.18); }
+        .logout-btn { background: linear-gradient(90deg, #f87171 0%, #fbbf24 100%); color: #fff; font-weight: 700; border-radius: 0.75rem; padding: 0.5rem 1.5rem; transition: background 0.3s, color 0.3s, transform 0.2s; box-shadow: 0 2px 8px 0 rgba(248,113,113,0.12); }
+        .logout-btn:hover { background: linear-gradient(90deg, #ef4444 0%, #f59e42 100%); color: #fff; transform: scale(1.05); }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-yellow-100 via-yellow-50 to-orange-100">
+    <!-- Top Navigation Bar -->
+    <nav class="nav-glass fixed top-0 left-0 w-full flex items-center justify-between px-8 py-4 z-50">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-extrabold text-yellow-700 tracking-tight">🚌 Driver Panel</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="/logout/" class="logout-btn">Logout</a>
+        </div>
+    </nav>
+    <div class="w-full max-w-3xl mx-auto p-6 fade-in pt-32">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-yellow-700 tracking-tight mb-2">Welcome, {{ request.user.username|title }}!</h1>
+            <div class="text-lg text-yellow-500 font-medium">Manage your assignments and leaves easily.</div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+            <a href="/driver/assigned/" class="action-card glass shadow-lg p-10 flex flex-col items-center hover:bg-yellow-50 transition">
+                <span class="text-4xl mb-2">🚌</span>
+                <span class="font-bold text-xl mb-1">Assigned Bus & Route</span>
+                <span class="text-gray-500">View your current assignment</span>
+            </a>
+            <a href="/driver/apply-leave/" class="action-card glass shadow-lg p-10 flex flex-col items-center hover:bg-yellow-50 transition">
+                <span class="text-4xl mb-2">📝</span>
+                <span class="font-bold text-xl mb-1">Apply for Leave</span>
+                <span class="text-gray-500">Request leave in advance</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

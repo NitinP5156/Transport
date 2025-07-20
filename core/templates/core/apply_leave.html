@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Leave</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #fef08a 0%, #fcd34d 50%, #fbbf24 100%);
+            background-size: 1200% 1200%;
+            animation: gradientMove 18s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        .glass {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 8px 32px 0 rgba(251,191,36,0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        .form-label {
+            position: absolute;
+            left: 1rem;
+            top: 0.75rem;
+            background: rgba(255,255,255,0.7);
+            padding: 0 0.25rem;
+            color: #f59e42;
+            font-weight: 600;
+            pointer-events: none;
+            transition: all 0.2s;
+        }
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -0.9rem;
+            left: 0.75rem;
+            font-size: 0.85rem;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center">
+    <div class="w-full max-w-md p-8 glass fade-in mt-16">
+        <h1 class="text-3xl font-extrabold text-center text-yellow-700 mb-6">Apply for Leave</h1>
+        <form method="post" class="space-y-7 relative">
+            {% csrf_token %}
+            <div class="relative mb-6">
+                <input type="date" name="start_date" class="form-input w-full px-4 py-3 rounded-lg border border-yellow-200 focus:ring-2 focus:ring-yellow-400 outline-none bg-transparent placeholder-transparent" placeholder=" " required>
+                <label class="form-label">Start Date</label>
+            </div>
+            <div class="relative mb-6">
+                <input type="date" name="end_date" class="form-input w-full px-4 py-3 rounded-lg border border-yellow-200 focus:ring-2 focus:ring-yellow-400 outline-none bg-transparent placeholder-transparent" placeholder=" " required>
+                <label class="form-label">End Date</label>
+            </div>
+            <div class="relative mb-6">
+                <textarea name="reason" class="form-input w-full px-4 py-3 rounded-lg border border-yellow-200 focus:ring-2 focus:ring-yellow-400 outline-none bg-transparent placeholder-transparent resize-none" placeholder=" " required></textarea>
+                <label class="form-label">Reason</label>
+            </div>
+            <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-orange-400 text-white font-bold py-3 rounded-lg shadow-lg hover:scale-105 transition">Submit Leave Request</button>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="/driver/" class="text-yellow-600 hover:underline font-semibold">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

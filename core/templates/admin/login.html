@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - College Transport System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-indigo-900 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md fade-in">
+        <h1 class="text-3xl font-extrabold mb-6 text-center text-indigo-900 tracking-tight">Admin Sign In</h1>
+        <p class="mb-4 text-center text-gray-600">Administrator access only</p>
+        {% if form.errors %}
+            <div class="mb-4">
+                <div class="text-red-600 text-center">Invalid username or password.</div>
+            </div>
+        {% endif %}
+        <form method="post" class="space-y-6" id="login-form">
+            {% csrf_token %}
+            <div>
+                <label for="id_username" class="block mb-1 font-semibold text-gray-200">Username</label>
+                <input type="text" name="username" autofocus required id="id_username" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" placeholder="Admin username">
+            </div>
+            <div>
+                <label for="id_password" class="block mb-1 font-semibold text-gray-200">Password</label>
+                <input type="password" name="password" required id="id_password" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition" placeholder="Password">
+            </div>
+            <button type="submit" class="w-full bg-gradient-to-r from-indigo-800 to-blue-700 text-white py-2 rounded-lg hover:from-indigo-900 hover:to-blue-900 font-semibold shadow-lg transition transform hover:-translate-y-1">Login</button>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="/" class="text-blue-700 hover:underline">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if edit %}Edit{% else %}Add{% endif %} Route</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-100 to-blue-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-lg fade-in">
+        <h1 class="text-3xl font-extrabold mb-6 text-center text-green-700">{% if edit %}Edit{% else %}Add{% endif %} Route</h1>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="id_start_point" class="block mb-1 font-semibold text-gray-700">Start Point</label>
+                <input type="text" name="start_point" id="id_start_point" value="{{ form.start_point.value|default_if_none:'' }}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 transition" placeholder="Enter start point" required>
+            </div>
+            <div>
+                <label for="id_end_point" class="block mb-1 font-semibold text-gray-700">End Point</label>
+                <input type="text" name="end_point" id="id_end_point" value="{{ form.end_point.value|default_if_none:'' }}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 transition" placeholder="Enter end point" required>
+            </div>
+            <div>
+                <label for="id_stops" class="block mb-1 font-semibold text-gray-700">Stops</label>
+                <input type="text" name="stops" id="id_stops" value="{{ form.stops.value|default_if_none:'' }}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 transition" placeholder="Comma-separated stops" required>
+            </div>
+            <div>
+                <label for="id_timings" class="block mb-1 font-semibold text-gray-700">Timings</label>
+                <input type="text" name="timings" id="id_timings" value="{{ form.timings.value|default_if_none:'' }}" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 transition" placeholder="e.g. 8:00 AM - 10:00 AM" required>
+            </div>
+            <div>
+                <label for="id_bus" class="block mb-1 font-semibold text-gray-700">Bus</label>
+                <select name="bus" id="id_bus" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 transition">
+                    <option value="">---------</option>
+                    {% for bus in form.fields.bus.queryset %}
+                        <option value="{{ bus.pk }}" {% if form.bus.value == bus.pk|stringformat:"s" %}selected{% endif %}>{{ bus.number }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-2 rounded-lg hover:from-green-600 hover:to-blue-600 font-semibold shadow-lg transition transform hover:-translate-y-1">{% if edit %}Update{% else %}Add{% endif %} Route</button>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="/panel/routes/" class="text-green-600 hover:underline">Back to Routes</a>
+        </div>
+    </div>
+</body>
+</html> 

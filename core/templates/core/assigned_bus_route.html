@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assigned Bus & Route</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #fef08a 0%, #fcd34d 50%, #fbbf24 100%);
+            background-size: 1200% 1200%;
+            animation: gradientMove 18s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        .glass {
+            background: rgba(255,255,255,0.7);
+            box-shadow: 0 8px 32px 0 rgba(251,191,36,0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        .info-label { color: #f59e42; font-weight: 700; }
+        .info-value { color: #92400e; font-weight: 600; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center">
+    <div class="w-full max-w-md p-8 glass fade-in mt-16">
+        <h1 class="text-3xl font-extrabold text-center text-yellow-700 mb-6">Assigned Bus & Route</h1>
+        {% if bus %}
+            <div class="mb-4">
+                <span class="info-label">Bus Number:</span> <span class="info-value">{{ bus.number }}</span>
+            </div>
+            <div class="mb-4">
+                <span class="info-label">Capacity:</span> <span class="info-value">{{ bus.capacity }}</span>
+            </div>
+            <div class="mb-4">
+                <span class="info-label">Status:</span> <span class="info-value">{{ bus.status }}</span>
+            </div>
+            {% if route %}
+                <div class="mb-4">
+                    <span class="info-label">Route:</span> <span class="info-value">{{ route.start_point }} - {{ route.end_point }}</span>
+                </div>
+                <div class="mb-4">
+                    <span class="info-label">Stops:</span> <span class="info-value">{{ route.stops }}</span>
+                </div>
+                <div class="mb-4">
+                    <span class="info-label">Timings:</span> <span class="info-value">{{ route.timings }}</span>
+                </div>
+            {% else %}
+                <div class="mb-4 text-yellow-600 font-semibold">No route assigned to this bus.</div>
+            {% endif %}
+        {% else %}
+            <div class="text-red-600 font-semibold mb-4">No bus assigned.</div>
+        {% endif %}
+        <div class="mt-6 text-center">
+            <a href="/driver/" class="text-yellow-600 hover:underline font-semibold">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

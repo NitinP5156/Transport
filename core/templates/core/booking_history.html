@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking History</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(270deg, #a5b4fc, #f0abfc, #6ee7b7, #60a5fa, #818cf8);
+            background-size: 1200% 1200%;
+            animation: gradientMove 18s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        .fade-in { animation: fadeIn 1s cubic-bezier(0.4,0,0.2,1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .card-animate { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s; }
+        .card-animate:hover { transform: translateY(-8px) scale(1.04) rotate(-1deg); box-shadow: 0 10px 32px 0 rgba(80,80,180,0.15); }
+        .status-booked { background: linear-gradient(90deg, #6ee7b7 0%, #60a5fa 100%); color: #2563eb; }
+        .status-cancelled { background: #f87171; color: #fff; }
+        .status-completed { background: #a7f3d0; color: #047857; }
+        .cancel-btn { background: linear-gradient(90deg, #f87171 0%, #fbbf24 100%); color: #fff; }
+        .cancel-btn:hover { background: linear-gradient(90deg, #ef4444 0%, #f59e42 100%); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-3xl p-6 fade-in">
+        <h1 class="text-3xl font-extrabold mb-8 text-center text-indigo-700 flex items-center gap-2">📖 Booking History</h1>
+        <div class="grid grid-cols-1 gap-6">
+            {% for booking in bookings %}
+            <div class="card-animate bg-white rounded-2xl shadow-xl p-6 flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">🚌</span>
+                        <span class="font-bold text-lg">{{ booking.route.start_point }} → {{ booking.route.end_point }}</span>
+                    </div>
+                    <div class="text-gray-600 mb-1">Bus: <span class="font-semibold">{{ booking.bus.number }}</span> | Seat: <span class="font-semibold">{{ booking.seat_number }}</span></div>
+                    <div class="text-gray-500 text-sm">Date: {{ booking.date }}</div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <span class="px-3 py-1 rounded-full font-semibold text-xs {% if booking.status == 'booked' %}status-booked{% elif booking.status == 'completed' %}status-completed{% else %}status-cancelled{% endif %}">
+                        {{ booking.status|title }}
+                    </span>
+                    {% if booking.status == 'booked' and booking.date >= today %}
+                    <form method="post" action="{% url 'booking_history' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="cancel_booking_id" value="{{ booking.id }}">
+                        <button type="submit" class="cancel-btn px-4 py-1 rounded-lg font-semibold shadow transition">Cancel</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center text-gray-500 py-8">No bookings found.</div>
+            {% endfor %}
+        </div>
+        <div class="mt-8 text-center">
+            <a href="/student/" class="text-blue-600 hover:underline">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 
